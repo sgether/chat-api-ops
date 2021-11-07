@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: chat-api
+  name: chat-api
+  namespace: chat-api
+spec:
+  replicas: 3
+  minReadySeconds: 0
+  selector:
+    matchLabels:
+      app: chat-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: chat-api
+    spec:
+      containers:
+      - image: sunwook317/chat-api:latest
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8080
+        name: chat-api
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: chat-api
+  name: chat-api
+  namespace: chat-api
+spec:
+  ports:
+    - name: 8080-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: chat-api
+  type: ClusterIP
