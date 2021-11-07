@@ -4,6 +4,7 @@ metadata:
   labels:
     app: chat-api
   name: chat-api
+  namespace: chat-api
 spec:
   ports:
     - name: 8080-8080
